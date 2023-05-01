@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import Navbar from "../Navbar/Navbar";
 import Footer from "../Footer/Footer";
 import "./homepage.css";
-
+import { v4 as uuid } from "uuid";
 export default function HomePage() {
   const [formValues, setFormValues] = useState({});
   const [cards, setCards] = useState([]);
@@ -14,13 +14,13 @@ export default function HomePage() {
 
   function handleSubmit(e) {
     e.preventDefault();
-    const newCard = { ...formValues };
+    const newCard = { ...formValues, id: uuid() };
     setCards([...cards, newCard]);
     setFormValues({});
     setNumberOfAccounts(numberOfAccounts + 1);
   }
-  function handleDelete(index) {
-    setCards(cards.filter((card, i) => i !== index));
+  function handleDelete(id) {
+    setCards(cards.filter((card) => id !== card.id));
     setNumberOfAccounts(numberOfAccounts - 1);
   }
 
@@ -56,12 +56,15 @@ export default function HomePage() {
           <div className="number">Number of Accounts: {numberOfAccounts}</div>
           {cards &&
             cards.map((card, index) => (
-              <div key={index} className="card">
-                <div className="id">{index + 1}</div>
+              <div key={card.id} className="card">
+                <div className="id">{card.id}</div>
                 <div className="customerName">{card.customerName}</div>
                 <div className="accountNumber">{card.accountNumber}</div>
                 <div className="accountType">{card.accountType}</div>
-                <button onClick={() => handleDelete(index)} className="delete">
+                <button
+                  onClick={() => handleDelete(card.id)}
+                  className="delete"
+                >
                   Delete Account
                 </button>
               </div>
